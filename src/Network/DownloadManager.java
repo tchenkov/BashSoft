@@ -16,7 +16,7 @@ public class DownloadManager {
     public static void download(String fileUrl){
         URL url;
         ReadableByteChannel rbc = null;
-        FileOutputStream fos = null;  // 08 5/8 4.
+        FileOutputStream fos = null;
         try {
             if (Thread.currentThread().getName().equals("main")){
                 OutputWriter.writeMessageOnNewLine("Started downloading...");
@@ -34,6 +34,12 @@ public class DownloadManager {
     
             if (Thread.currentThread().getName().equals("main")){
                 OutputWriter.writeMessageOnNewLine("Download complete.");
+            }
+    
+            if (!"main".equalsIgnoreCase(Thread.currentThread().getName())) {
+                OutputWriter.writeEmptyLine();
+                OutputWriter.writeMessageOnNewLine(String.format("Download on thread %d is complete.", Thread.currentThread().getId()));
+                OutputWriter.writeMessage(String.format("%s >", SessionData.currentPath));
             }
         }
         catch (MalformedURLException mfue){
@@ -56,11 +62,9 @@ public class DownloadManager {
                 ioe.printStackTrace();
             }
         }
-        
-        
-    
     }
-    
+    // test link
+    // downloadAsync https://upload.wikimedia.org/wikipedia/commons/3/3d/LARGE_elevation.jpg
     public static void downloadOnNewThread(String fileUrl){
         Thread thread = new Thread(() -> download(fileUrl));
         OutputWriter.writeMessageOnNewLine(String.format("Worker thread %d started downloading", thread.getId()));
